@@ -7,5 +7,5 @@ title: index
 {% for post in site.posts %}
 
 ### `{{ post.categories | join: "/" }}` <a href="{{ post.url }}">{{ post.title }}</a> <small>{{ post.date | date: "%Y-%m-%d" }}</small>
-> {{ post.excerpt }}
+> {{ post.excerpt | newline_to_br }}
 {% endfor %}
