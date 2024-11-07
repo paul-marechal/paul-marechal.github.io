@@ -1,9 +1,8 @@
 ---
 layout: post
+title: Orienting a VR Character
 excerpt_separator: <!--more-->
 ---
-
-# Orienting a VR Character
 
 I had to rotate a VR controller character following the player's HMD rotation and had to scratch my head a little...
 <!--more-->
