@@ -1,13 +1,14 @@
 ---
 layout: post
-title: Orienting a VR Character
 excerpt_separator: <!--more-->
 ---
+
+# Orienting a VR Character
 
 I had to rotate a VR controller character following the player's HMD rotation and had to scratch my head a little...
 <!--more-->
 
-# The naive approach
+## The naive approach
 
 Just follow a projection of the HMD forward vector on XZ:
 
@@ -16,7 +17,7 @@ var hmd_forward_xz := -hmd.basis.z * Vector3(1, 0, 1)
 var rotation := Basis.looking_at(hmd_forward, Vector3.UP)
 ```
 
-# The better approach
+## The better approach
 
 Intersect the HMD's YZ plane with the world's XZ plane:
 
