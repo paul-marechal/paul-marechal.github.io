@@ -12,7 +12,7 @@ I had to rotate a VR controller character following the player's HMD rotation an
 Just follow a projection of the HMD forward vector on XZ:
 
 ```gdscript
-var hmd_forward_xz := -hmd.basis.z * Vector3(1, 0, 1)
+var hmd_forward_xz := -hmd_basis.z * Vector3(1, 0, 1)
 var rotation := Basis.looking_at(hmd_forward, Vector3.UP)
 ```
 
@@ -21,7 +21,7 @@ var rotation := Basis.looking_at(hmd_forward, Vector3.UP)
 Intersect the HMD's YZ plane with the world's XZ plane:
 
 ```gdscript
-var z := hmd.basis.x.cross(Vector3.UP)
+var z := hmd_basis.x.cross(Vector3.UP)
 var rotation := Basis(
     Vector3.UP.cross(z).normalized(),
     Vector3.UP,
