@@ -16,6 +16,9 @@ var hmd_forward_xz := -hmd_basis.z * Vector3(1, 0, 1)
 var rotation := Basis.looking_at(hmd_forward, Vector3.UP)
 ```
 
+<script type="module" src="/assets/vr-hmd-forward.js"></script>
+<div id="vr-hmd-forward-root"></div>
+
 ## The better approach
 
 Intersect the HMD's YZ plane with the world's XZ plane:
@@ -28,3 +31,6 @@ var rotation := Basis(
     z.normalized()
 )
 ```
+
+<script type="module" src="/assets/vr-hmd-yz-plane.js"></script>
+<div id="vr-hmd-yz-plane-root"></div>
