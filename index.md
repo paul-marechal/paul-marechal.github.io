@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Paul Maréchal
+title: index
 ---
 
 ## Posts:
