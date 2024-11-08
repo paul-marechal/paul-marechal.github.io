@@ -19,3 +19,12 @@ html {
   0% { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
+
+.demo-threejs {
+  background-color: #f6f8fa;
+  cursor: grab;
+}
+
+.demo-threejs:active {
+  cursor: grabbing;
+}
