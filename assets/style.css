@@ -20,11 +20,17 @@ html {
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-.demo-threejs {
+.illustration {
   background-color: #f6f8fa;
+  /* border: 1px solid #8882; */
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.interactive {
   cursor: grab;
 }
 
-.demo-threejs:active {
+.interactive:active {
   cursor: grabbing;
 }
