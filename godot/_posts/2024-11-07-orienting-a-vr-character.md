@@ -1,11 +1,8 @@
 ---
 layout: post
 title: Orienting a VR Character
-excerpt_separator: <!--more-->
+excerpt: Aligning a VR character following a player's headset is not as easy as one may think...
 ---
-
-I had to rotate a VR controller character following the player's HMD rotation and had to scratch my head a little...
-<!--more-->
 
 ## The naive approach
 
@@ -45,7 +42,9 @@ Plane intersection equations were a bit too much for me, but I noticed that the 
 var direction := normal_a.cross(normal_b).normalized()
 ```
 
-Assuming this direction is going to be our new `-Z` or forward vector, we can build a [`Basis`](https://docs.godotengine.org/en/stable/classes/class_basis.html) from it!
+> [Cross product refresher...](https://en.wikipedia.org/wiki/Cross_product#Definition)
+
+Assuming this direction is going to be our new `-Z` or forward vector, we can build a [`Basis`](https://docs.godotengine.org/en/stable/classes/class_basis.html) from it: The normal of the headset's `YZ` plane is the `+X` vector, while the world's `XZ` plane normal is `Vector3.UP`:
 
 ```gdscript
 var z := hmd_basis.x.cross(Vector3.UP)

@@ -3,7 +3,10 @@ layout: main
 title: index
 ---
 
-## Posts
+## What is this
+
+Things I wish someone told me, I'll post here:
+
 {% for post in site.posts %}
 
 ### `{{ post.categories | join: "/" }}` <a href="{{ post.url }}">{{ post.title }}</a> <small style="color:gray">{{ post.date | date: "%Y-%m-%d" }}</small>

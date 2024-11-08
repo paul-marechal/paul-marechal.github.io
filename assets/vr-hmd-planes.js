@@ -29,13 +29,13 @@ scene.add(grid);
 
 const hmd = new three.Group();
 
-const hmd_wireframe = new three.Mesh(
+const hmd_wire = new three.Mesh(
   new three.ConeGeometry(0.2, 0.2, 4),
   new three.MeshBasicMaterial({ color: "black", wireframe: true })
 );
 hmd_wire.translateZ(-0.1);
-hmd_wireframe.rotateY(Math.PI / 4);
-hmd_wireframe.rotateOnWorldAxis(vec3(1, 0, 0), Math.PI / 2);
+hmd_wire.rotateY(Math.PI / 4);
+hmd_wire.rotateOnWorldAxis(vec3(1, 0, 0), Math.PI / 2);
 
 const hmd_yz = new three.Mesh(
   new three.PlaneGeometry(1, 1),
@@ -48,8 +48,7 @@ const hmd_yz = new three.Mesh(
 );
 hmd_yz.rotateY(Math.PI / 2);
 
-hmd.add(hmd_wireframe, hmd_yz);
-
+hmd.add(hmd_wire, hmd_yz);
 hmd.position.set(0, 0.5, 0);
 
 scene.add(hmd);

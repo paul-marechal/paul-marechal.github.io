@@ -56,7 +56,6 @@ const hmd_yz = new three.Mesh(
 hmd_yz.rotateY(Math.PI / 2);
 
 hmd.add(hmd_wire, hmd_forward, hmd_yz);
-
 hmd.position.set(0, 0.5, 0);
 
 scene.add(hmd);
