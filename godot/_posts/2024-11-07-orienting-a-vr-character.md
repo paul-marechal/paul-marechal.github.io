@@ -45,7 +45,7 @@ Plane intersection equations were a bit too much for me, but I noticed that the 
 var direction := normal_a.cross(normal_b).normalized()
 ```
 
-Assuming this direction is going to be my new `-Z` or forward vector, we can build a basis from it!
+Assuming this direction is going to be our new `-Z` or forward vector, we can build a [`Basis`](https://docs.godotengine.org/en/stable/classes/class_basis.html) from it!
 
 ```gdscript
 var z := hmd_basis.x.cross(Vector3.UP)
