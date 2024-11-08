@@ -33,6 +33,7 @@ const hmd_wire = new three.Mesh(
   new three.ConeGeometry(0.2, 0.2, 4),
   new three.MeshBasicMaterial({ color: "black", wireframe: true })
 );
+hmd_wire.translateZ(-0.1);
 hmd_wire.rotateY(Math.PI / 4);
 hmd_wire.rotateOnWorldAxis(vec3(1, 0, 0), Math.PI / 2);
 
