@@ -62,7 +62,7 @@ scene.add(hmd);
 
 const player = new three.ArrowHelper(vec3(0, 0, -1), vec3(0, 0, 0), 0.5, "red");
 
-updatePlayer();
+update();
 scene.add(player);
 
 const orbitControls = new OrbitControls(camera, renderer.domElement);
@@ -73,14 +73,14 @@ transformControls.addEventListener(
   "dragging-changed",
   (event) => (orbitControls.enabled = !event.value)
 );
-transformControls.addEventListener("objectChange", () => updatePlayer());
+transformControls.addEventListener("objectChange", () => update());
 transformControls.space = "world";
 transformControls.mode = "rotate";
 transformControls.attach(hmd);
 
 scene.add(transformControls.getHelper());
 
-function updatePlayer() {
+function update() {
   const projection = hmd
     .getWorldDirection(vec3())
     .negate()
