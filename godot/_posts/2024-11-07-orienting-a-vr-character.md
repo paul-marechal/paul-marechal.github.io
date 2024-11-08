@@ -22,7 +22,7 @@ This would be the result:
 <script type="module" src="/assets/vr-hmd-forward.js"></script>
 <div id="vr-hmd-forward-root" class="demo-threejs"></div>
 
-One issue there happens when the player looks down to the ground: With just a few movement of the head it is possible to drastically alter the direction!
+One issue there happens when the player looks down to the ground: With only slight movements of the head it is possible to drastically alter the direction!
 
 ## The better approach
 
@@ -36,7 +36,7 @@ This is where planes help us: If we consider a plane splitting our head in two f
 
 Conveniently, we can represent the horizon as another plane and intersecting them should give us a line: This will be our direction!
 
-Plane intersection equations were a bit too much for me, but I noticed that the direction of the intersection is perpendicular to both planes normals:
+The intersection is perpendicular to the normals of both planes:
 
 ```gdscript
 var direction := normal_a.cross(normal_b).normalized()
