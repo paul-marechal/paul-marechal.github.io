@@ -52,12 +52,10 @@ In our case we have:
 Assuming the resulting direction is going to be our new `-Z` or forward vector, we can build a [`Basis`](https://docs.godotengine.org/en/stable/classes/class_basis.html):
 
 ```gdscript
-var z := hmd_basis.x.cross(Vector3.UP)
-var rotation := Basis(
-    Vector3.UP.cross(z).normalized(),
-    Vector3.UP,
-    z.normalized()
-)
+var y := Vector3.UP
+var z := hmd_basis.x.cross(y).normalized()
+var x := y.cross(z).normalized()
+var rotation := Basis(x, y, z)
 ```
 
 This is the new result:
