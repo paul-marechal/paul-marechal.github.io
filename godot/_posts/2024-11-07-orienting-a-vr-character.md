@@ -32,5 +32,5 @@ var rotation := Basis(
 )
 ```
 
-<script type="module" src="/assets/vr-hmd-yz-plane.js"></script>
-<div id="vr-hmd-yz-plane-root"></div>
+<script type="module" src="/assets/vr-hmd-planes.js"></script>
+<div id="vr-hmd-planes-root"></div>

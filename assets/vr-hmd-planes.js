@@ -5,16 +5,16 @@ import * as three from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 
-const width = 480;
-const height = 360;
+import { basis, createRenderer, vec3 } from "./three-utils.js";
 
-const renderer = new three.WebGLRenderer({ alpha: true });
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(width, height);
+const root = document.getElementById("vr-hmd-planes-root");
 
-document
-  .getElementById("vr-hmd-yz-plane-root")
-  .appendChild(renderer.domElement);
+const width = root.clientWidth;
+const height = 400;
+
+const renderer = createRenderer(width, height);
+
+root.appendChild(renderer.domElement);
 
 const camera = new three.PerspectiveCamera(45, width / height, 0.1, 10);
 camera.position.set(-2, 2, -2);
@@ -34,14 +34,14 @@ const hmd_wireframe = new three.Mesh(
   new three.MeshBasicMaterial({ color: "black", wireframe: true })
 );
 hmd_wireframe.rotateY(Math.PI / 4);
-hmd_wireframe.rotateOnWorldAxis(new three.Vector3(1, 0, 0), Math.PI / 2);
+hmd_wireframe.rotateOnWorldAxis(vec3(1, 0, 0), Math.PI / 2);
 
 const hmd_yz = new three.Mesh(
   new three.PlaneGeometry(1, 1),
   new three.MeshBasicMaterial({
     side: three.DoubleSide,
     transparent: true,
-    color: 'magenta',
+    color: "magenta",
     opacity: 0.15,
   })
 );
@@ -49,7 +49,7 @@ hmd_yz.rotateY(Math.PI / 2);
 
 hmd.add(hmd_wireframe, hmd_yz);
 
-hmd.position.set(0, 1, 0);
+hmd.position.set(0, 0.5, 0);
 
 scene.add(hmd);
 
@@ -58,7 +58,7 @@ const world_xz = new three.Mesh(
   new three.MeshBasicMaterial({
     side: three.DoubleSide,
     transparent: true,
-    color: 'cyan',
+    color: "cyan",
     opacity: 0.15,
   })
 );
@@ -67,19 +67,14 @@ world_xz.position.copy(hmd.position);
 scene.add(world_xz);
 
 const hmd_forward = new three.ArrowHelper(
-  new three.Vector3(0, 0, -1).normalize(),
-  new three.Vector3(0, 0, 0),
+  vec3(0, 0, -1).normalize(),
+  vec3(0, 0, 0),
   0.5,
   "blue"
 );
 hmd_forward.position.copy(hmd.position);
 
-const player = new three.ArrowHelper(
-  new three.Vector3(0, 0, -1),
-  new three.Vector3(0, 0, 0),
-  0.5,
-  "red"
-);
+const player = new three.ArrowHelper(vec3(0, 0, -1), vec3(0, 0, 0), 0.5, "red");
 
 update();
 scene.add(hmd_forward, player);
@@ -100,15 +95,11 @@ transformControls.attach(hmd);
 scene.add(transformControls.getHelper());
 
 function update() {
-  const y = new three.Vector3(0, 1, 0);
-  const z = hmd.localToWorld(new three.Vector3(1, 0, 0)).cross(new three.Vector3(0, 1, 0)).normalize();
-  const x = new three.Vector3(0, 1, 0).cross(z).normalize();
-  const basis = new three.Matrix3().set(
-    x.x, y.x, z.x,
-    x.y, y.y, y.z,
-    x.z, y.z, z.z
-  );
-  const direction = new three.Vector3(0, 0, -1).applyMatrix3(basis);
+  const y = vec3(0, 1, 0);
+  const z = hmd.localToWorld(vec3(1, 0, 0)).cross(vec3(0, 1, 0)).normalize();
+  const x = vec3(0, 1, 0).cross(z).normalize();
+  const mat3 = basis(x, y, z);
+  const direction = vec3(0, 0, -1).applyMatrix3(mat3);
   hmd_forward.setDirection(direction);
   player.setDirection(direction);
 }

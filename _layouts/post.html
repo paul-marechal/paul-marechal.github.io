@@ -2,6 +2,6 @@
 layout: main
 ---
 
-<h1><code class="language-plaintext highlighter-rouge">{{ page.categories }}</code> {{ page.title }} <small style="color:gray">{{ page.date | date: "%Y-%m-%d" }}</small></h1>
+<h1><code>{{ page.categories | join: "/" }}</code> {{ page.title }} <small style="color:gray">{{ page.date | date: "%Y-%m-%d" }}</small></h1>
 
 {{ content }}

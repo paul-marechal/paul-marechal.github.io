@@ -5,14 +5,16 @@ import * as three from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 
-const width = 480;
-const height = 360;
+import { createRenderer, vec3 } from "./three-utils.js";
 
-const renderer = new three.WebGLRenderer({ alpha: true });
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(width, height);
+const root = document.getElementById("vr-hmd-forward-root");
 
-document.getElementById("vr-hmd-forward-root").appendChild(renderer.domElement);
+const width = root.clientWidth;
+const height = 400;
+
+const renderer = createRenderer(width, height);
+
+root.appendChild(renderer.domElement);
 
 const camera = new three.PerspectiveCamera(45, width / height, 0.1, 10);
 camera.position.set(-2, 2, -2);
@@ -32,11 +34,11 @@ const hmd_wire = new three.Mesh(
   new three.MeshBasicMaterial({ color: "black", wireframe: true })
 );
 hmd_wire.rotateY(Math.PI / 4);
-hmd_wire.rotateOnWorldAxis(new three.Vector3(1, 0, 0), Math.PI / 2);
+hmd_wire.rotateOnWorldAxis(vec3(1, 0, 0), Math.PI / 2);
 
 const hmd_forward = new three.ArrowHelper(
-  new three.Vector3(0, 0, -1).normalize(),
-  new three.Vector3(0, 0, 0),
+  vec3(0, 0, -1).normalize(),
+  vec3(0, 0, 0),
   0.5,
   "blue"
 );
@@ -46,7 +48,7 @@ const hmd_yz = new three.Mesh(
   new three.MeshBasicMaterial({
     side: three.DoubleSide,
     transparent: true,
-    color: 'magenta',
+    color: "magenta",
     opacity: 0.15,
   })
 );
@@ -58,12 +60,7 @@ hmd.position.set(0, 1, 0);
 
 scene.add(hmd);
 
-const player = new three.ArrowHelper(
-  new three.Vector3(0, 0, -1),
-  new three.Vector3(0, 0, 0),
-  0.5,
-  "red"
-);
+const player = new three.ArrowHelper(vec3(0, 0, -1), vec3(0, 0, 0), 0.5, "red");
 
 updatePlayer();
 scene.add(player);
@@ -85,10 +82,10 @@ scene.add(transformControls.getHelper());
 
 function updatePlayer() {
   const projection = hmd
-    .getWorldDirection(new three.Vector3())
+    .getWorldDirection(vec3())
     .negate()
-    .projectOnPlane(new three.Vector3(0, 1, 0));
-  const direction = new three.Vector3().copy(projection).normalize();
+    .projectOnPlane(vec3(0, 1, 0));
+  const direction = vec3().copy(projection).normalize();
   player.setDirection(direction);
 }
 
