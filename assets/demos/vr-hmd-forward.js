@@ -5,7 +5,7 @@ import * as three from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 
-import { createRenderer, vec3 } from "./three-utils.js";
+import { createRenderer, vec3 } from "/assets/js/three-utils.js";
 
 const root = document.getElementById("vr-hmd-forward-root");
 

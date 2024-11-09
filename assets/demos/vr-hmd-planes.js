@@ -5,7 +5,7 @@ import * as three from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 
-import { basis, createRenderer, vec3 } from "./three-utils.js";
+import { basis, createRenderer, vec3 } from "/assets/js/three-utils.js";
 
 const root = document.getElementById("vr-hmd-planes-root");
 
