@@ -2,7 +2,11 @@
 layout: post
 title: Orienting a VR character
 excerpt: Aligning a VR character following a player's headset can be tricky
-links:
+tags:
+  - godot
+  - math
+  - vr
+assets:
   player_yz: https://emojigraph.org/media/emojidex/moai_1f5ff.png
 ---
 
@@ -12,7 +16,7 @@ What if we just extended the vector coming out from the player's face?
 
 On an [`XRCamera3D`](https://docs.godotengine.org/en/stable/classes/class_xrcamera3d.html) this would be its `-Z` vector (a.k.a. `-basis.z`).
 
-Then we just follow a projection this vector on the world's XZ plane:
+Then we just follow a projection this vector on the world's `XZ` plane:
 
 ```gdscript
 var hmd_forward_xz := -hmd_basis.z * Vector3(1, 0, 1)
@@ -55,7 +59,7 @@ This is where planes help us: If we consider a plane splitting our head in two f
       <line x1="0" y1="0" x2="0" y2="-100" stroke="#0A0" stroke-width="5" />
       <text x="100" y="-10" fill="#66F" style="font-weight: bold;">+Z</text>
       <line x1="0" y1="0" x2="100" y2="0" stroke="#66F" stroke-width="5" />
-      <image x="-64px" y="-64px" width="128px" height="128px" href="{{ page.links.player_yz }}" transform-origin="center" />
+      <image x="-64px" y="-64px" width="128px" height="128px" href="{{ page.assets.player_yz }}" transform-origin="center" />
     </g>
   </svg>
 </svg>
@@ -63,20 +67,23 @@ This is where planes help us: If we consider a plane splitting our head in two f
 
 Conveniently, we can represent the horizon as another plane and intersecting them should give us a line: This will be our direction!
 
-The intersection is perpendicular to the normals of both planes:
+The intersection is perpendicular to the normals of both planes: _[Cross product refresher...](https://en.wikipedia.org/wiki/Cross_product#Definition)_
 
-```gdscript
-var direction := normal_a.cross(normal_b).normalized()
-```
-
-> [Cross product refresher...](https://en.wikipedia.org/wiki/Cross_product#Definition)
+$$
+\begin{aligned}
+  d = \vec{n}_a \times \vec{n}_b
+\end{aligned}
+$$
 
 In our case we have:
 
-- The player's headset `YZ` plane normal: `+X`.
-- The horizon/world `XZ` plane normal: `Vector3.UP`.
+$$
+\begin{aligned}
+  Z_{basis} = \vec{X}_{headset} \times (0, 1, 0)
+\end{aligned}
+$$
 
-Assuming the resulting direction is going to be our new `-Z` or forward vector, we can build a [`Basis`](https://docs.godotengine.org/en/stable/classes/class_basis.html):
+We can now build a [`Basis`](https://docs.godotengine.org/en/stable/classes/class_basis.html):
 
 ```gdscript
 var y := Vector3.UP
@@ -85,7 +92,7 @@ var x := y.cross(z).normalized()
 var rotation := Basis(x, y, z)
 ```
 
-This is the new result:
+And this is the new result:
 
 <script type="module" src="/assets/vr-hmd-planes.js"></script>
 <div id="vr-hmd-planes-root" class="illustration interactive"></div>
