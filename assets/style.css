@@ -28,7 +28,15 @@ html {
 }
 
 .interactive {
+  transition: box-shadow 1s;
+  border: 1px solid transparent;
   cursor: grab;
+}
+
+.interactive:hover {
+  background-color: #fff;
+  border-color: #16d4;
+  box-shadow: 0 0 16px #0002;
 }
 
 .interactive:active {

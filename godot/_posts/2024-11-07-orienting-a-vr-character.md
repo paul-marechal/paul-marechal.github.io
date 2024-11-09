@@ -1,7 +1,9 @@
 ---
 layout: post
-title: Orienting a VR Character
-excerpt: Aligning a VR character following a player's headset is not as easy as one may think...
+title: Orienting a VR character
+excerpt: Aligning a VR character following a player's headset can be tricky
+links:
+  player_yz: https://emojigraph.org/media/emojidex/moai_1f5ff.png
 ---
 
 ## The naive approach
@@ -35,17 +37,26 @@ The problem becomes how do we modulate between `-Z` and `+Y`?
 This is where planes help us: If we consider a plane splitting our head in two from top to bottom then I'd like to orient the character controller alongside it and towards the horizon.
 
 <svg width="100%" height="256px" xmlns="http://www.w3.org/2000/svg" class="illustration">
-  <svg x="50%" y="0" height="100%" style="overflow: visible;">
-    <rect x="-128" y="0" width="256" height="100%" fill="#F0F3" />
-    <text x="10" y="20" stroke="#080" fill="#0F0" style="font-weight: bold;">+Y</text>
-    <line x1="0" y1="128" x2="0" y2="28" stroke="#0F0" stroke-width="5" />
-    <text x="100" y="115" stroke="#338" fill="#66F" style="font-weight: bold;">+Z</text>
-    <line x1="0" y1="128" x2="100" y2="128" stroke="#66F" stroke-width="5" />
-    <text x="-33%" y="115" stroke="#099" fill="#0AA" style="font-weight: bold;">Horizon</text>
-    <line x1="-64" y1="128" x2="-1000" y2="128" stroke="#0AA" stroke-width="5" />
-  </svg>
+  <text x="12.5%" y="115" fill="#0AA" style="font-weight: bold;">Horizon</text>
+  <line x1="0%" y1="50%" x2="100%" y2="50%" stroke="#0AA" stroke-width="3" />
   <svg x="50%" y="50%" style="overflow: visible;">
-    <image x="-64px" y="-64px" width="128px" height="128px" href="https://emojigraph.org/media/emojidex/moai_1f5ff.png" />
+    <g>
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="rotate"
+        from="0 0 0"
+        to="-360 0 0"
+        dur="10s"
+        repeatCount="indefinite" />
+      <rect x="-128" y="-128" width="256" height="256" fill="#F0F3" />
+      <circle cx="0" cy="0" r="100" fill="transparent" stroke="#A004" stroke-width="3" />
+      <text x="10" y="-100" fill="#0A0" style="font-weight: bold;">+Y</text>
+      <line x1="0" y1="0" x2="0" y2="-100" stroke="#0A0" stroke-width="5" />
+      <text x="100" y="-10" fill="#66F" style="font-weight: bold;">+Z</text>
+      <line x1="0" y1="0" x2="100" y2="0" stroke="#66F" stroke-width="5" />
+      <image x="-64px" y="-64px" width="128px" height="128px" href="{{ page.links.player_yz }}" transform-origin="center" />
+    </g>
   </svg>
 </svg>
 
