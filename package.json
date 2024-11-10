@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "description": "Bunch of scripts used on this website",
   "scripts": {
-    "build": "prettier typescript --write && tsc -b",
+    "prettier": "prettier typescript --write",
+    "build": "tsc -b",
     "watch": "tsc -b -w"
   },
   "author": "Paul Maréchal",

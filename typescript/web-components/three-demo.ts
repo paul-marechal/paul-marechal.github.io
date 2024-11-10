@@ -1,25 +1,20 @@
 import * as three from 'three';
+import type { MaybePromise } from '../type-utils';
 
 export interface ReadyState {
   readonly scene: three.Scene;
   readonly camera: three.Camera;
-  readonly renderer: three.Renderer;
+  readonly renderer: three.WebGLRenderer;
   render(): void;
 }
 
-export interface ProcessState extends ReadyState {
-  readonly delta: number;
-}
-
-export interface ThreeModule {
-  render?: 'auto' | 'manual';
-  createCamera(width: number, height: number): three.Camera;
-  ready?(state: ReadyState): void;
-  process?(state: ProcessState): void;
-}
+export type ThreeDemo = (
+  scene: three.Scene,
+  renderer: three.WebGLRenderer,
+  render: () => void,
+) => MaybePromise<three.Camera>;
 
 export class HTMLThreeDemoElement extends HTMLElement {
-  #lastAnimationFrame = -1;
   #abort?: AbortController;
 
   constructor() {
@@ -45,7 +40,7 @@ export class HTMLThreeDemoElement extends HTMLElement {
 
   connectedCallback(): void {
     this.#abort = new AbortController();
-    this.#start(this.#abort.signal);
+    this.init(this.#abort.signal);
   }
 
   disconnectCallback(): void {
@@ -57,7 +52,7 @@ export class HTMLThreeDemoElement extends HTMLElement {
     canvas: HTMLCanvasElement,
     width: number,
     height: number,
-  ): three.Renderer {
+  ): three.WebGLRenderer {
     const renderer = new three.WebGLRenderer({
       alpha: true,
       antialias: true,
@@ -68,56 +63,44 @@ export class HTMLThreeDemoElement extends HTMLElement {
     return renderer;
   }
 
-  async #start(abort: AbortSignal): Promise<void> {
+  async init(abort: AbortSignal): Promise<void> {
     const src = this.getModule();
     if (!src) {
       throw new Error("missing 'module' attribute!");
     }
-    const nodeFactory: () => ThreeModule = (await import(src)).default;
+    const nodeFactory = (await import(src)).default as ThreeDemo;
     if (abort.aborted || !nodeFactory) {
       return;
     }
     this.attachShadow({ mode: 'open' });
     const canvas = document.createElement('canvas');
     this.shadowRoot!.appendChild(canvas);
-    this.#mainLoop(nodeFactory(), canvas, abort);
+    this.start(nodeFactory, canvas);
   }
 
-  async #mainLoop(
-    node: ThreeModule,
+  async start(
+    nodeFactory: ThreeDemo,
     canvas: HTMLCanvasElement,
-    abort: AbortSignal,
   ): Promise<void> {
     const width = this.getWidth();
     const height = this.getHeight();
     const renderer = this.#createRenderer(canvas, width, height);
-    const camera = node.createCamera(width, height);
+
     const scene = new three.Scene();
-    const state = {
-      delta: 0,
-      scene,
-      camera,
-      renderer,
-      render() {
-        this.renderer.render(this.scene, this.camera);
-      },
-    } satisfies ReadyState | ProcessState;
+    const camera = await nodeFactory(scene, renderer, render);
 
-    canvas.addEventListener('mousemove', () => {
-      state.render();
-    });
-    node.ready?.(state);
-    state.render();
-
-    while (node.render == 'auto' && !abort.aborted) {
+    let pendingRender: Promise<number> | undefined;
+    async function scheduleRender(): Promise<number> {
       const time = await new Promise(requestAnimationFrame);
-      if (abort.aborted) return;
-      if (this.#lastAnimationFrame != -1) {
-        state.delta = time - this.#lastAnimationFrame;
-        node.process?.(state);
-      }
-      this.#lastAnimationFrame = time;
-      state.render();
+      pendingRender = undefined;
+      renderer.render(scene, camera);
+      return time;
     }
+    function render(): void {
+      pendingRender ??= scheduleRender();
+    }
+
+    canvas.addEventListener('mousemove', () => render());
+    render();
   }
 }

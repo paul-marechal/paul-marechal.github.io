@@ -1,6 +1,10 @@
 import * as three from 'three';
 
-export function vec3(x = 0, y = 0, z = 0): three.Vector3 {
+export function vec2(x?: number, y?: number): three.Vector2 {
+  return new three.Vector2(x, y);
+}
+
+export function vec3(x?: number, y?: number, z?: number): three.Vector3 {
   return new three.Vector3(x, y, z);
 }
 
