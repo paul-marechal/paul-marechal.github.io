@@ -1,13 +1,24 @@
-import { ArrowHelper, Camera, ConeGeometry, DoubleSide, Group, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera, PlaneGeometry, Renderer } from "three";
+import {
+  ArrowHelper,
+  Camera,
+  ConeGeometry,
+  DoubleSide,
+  Group,
+  Mesh,
+  MeshBasicMaterial,
+  Object3D,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Renderer,
+} from 'three';
 // @ts-expect-error
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // @ts-expect-error
-import { TransformControls } from "three/addons/controls/TransformControls.js";
-import { getById } from "../dom-utils.js";
-import { DemoProcessState, ThreeDemo, vec3 } from "../three-utils.js";
+import { TransformControls } from 'three/addons/controls/TransformControls.js';
+import { getById } from '../dom-utils.js';
+import { DemoProcessState, ThreeDemo, vec3 } from '../three-utils.js';
 
 class Demo extends ThreeDemo {
-
   hmd: Object3D;
   player: ArrowHelper;
 
@@ -17,7 +28,7 @@ class Demo extends ThreeDemo {
 
     const hmd_wire = new Mesh(
       new ConeGeometry(0.2, 0.2, 4),
-      new MeshBasicMaterial({ color: "black", wireframe: true })
+      new MeshBasicMaterial({ color: 'black', wireframe: true }),
     );
     hmd_wire.translateZ(-0.1);
     hmd_wire.rotateY(Math.PI / 4);
@@ -27,7 +38,7 @@ class Demo extends ThreeDemo {
       vec3(0, 0, -1).normalize(),
       vec3(0, 0, 0),
       0.5,
-      "blue"
+      'blue',
     );
 
     const hmd_yz = new Mesh(
@@ -35,20 +46,23 @@ class Demo extends ThreeDemo {
       new MeshBasicMaterial({
         side: DoubleSide,
         transparent: true,
-        color: "magenta",
+        color: 'magenta',
         opacity: 0.15,
-      })
+      }),
     );
     hmd_yz.rotateY(Math.PI / 2);
 
-    this.add(this.hmd = new Group().add(
-      hmd_wire, hmd_forward, hmd_yz
-    ));
+    this.add((this.hmd = new Group().add(hmd_wire, hmd_forward, hmd_yz)));
     this.hmd.position.set(0, 0.5, 0);
 
-    this.add(this.player = new ArrowHelper(
-      vec3(0, 0, -1),
-      vec3(0, 0, 0), 0.5, 'red'));
+    this.add(
+      (this.player = new ArrowHelper(
+        vec3(0, 0, -1),
+        vec3(0, 0, 0),
+        0.5,
+        'red',
+      )),
+    );
   }
 
   createCamera(height: number, width: number): Camera {
@@ -62,14 +76,17 @@ class Demo extends ThreeDemo {
     const orbitControls = new OrbitControls(camera, renderer.domElement);
     orbitControls.update();
 
-    const transformControls = new TransformControls(camera, renderer.domElement);
+    const transformControls = new TransformControls(
+      camera,
+      renderer.domElement,
+    );
     transformControls.addEventListener(
-      "dragging-changed",
-      (event: any) => (orbitControls.enabled = !event.value)
+      'dragging-changed',
+      (event: any) => (orbitControls.enabled = !event.value),
     );
     // transformControls.addEventListener("objectChange", () => update());
-    transformControls.space = "world";
-    transformControls.mode = "rotate";
+    transformControls.space = 'world';
+    transformControls.mode = 'rotate';
     transformControls.attach(this.hmd);
 
     this.add(transformControls.getHelper());
@@ -85,5 +102,5 @@ class Demo extends ThreeDemo {
   }
 }
 
-const root = getById("vr-hmd-forward-root");
+const root = getById('vr-hmd-forward-root');
 new Demo().run(root, root.clientWidth, 400);

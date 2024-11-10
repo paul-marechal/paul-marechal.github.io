@@ -1,4 +1,14 @@
-import { AxesHelper, Camera, GridHelper, Matrix3, Object3D, Renderer, Scene, Vector3, WebGLRenderer } from "three";
+import {
+  AxesHelper,
+  Camera,
+  GridHelper,
+  Matrix3,
+  Object3D,
+  Renderer,
+  Scene,
+  Vector3,
+  WebGLRenderer,
+} from 'three';
 
 export function vec3(x = 0, y = 0, z = 0): Vector3 {
   return new Vector3(x, y, z);
@@ -15,7 +25,6 @@ export interface DemoProcessState {
 }
 
 export abstract class ThreeDemo {
-
   #lastAnimationFrame = -1;
 
   readonly scene: Scene;
@@ -34,10 +43,7 @@ export abstract class ThreeDemo {
   }
 
   protected addDefaultGrid(): this {
-    return this.add(
-      new AxesHelper(5),
-      new GridHelper(2, 10)
-    );
+    return this.add(new AxesHelper(5), new GridHelper(2, 10));
   }
 
   protected add(...objects: Object3D[]): this {
@@ -45,8 +51,8 @@ export abstract class ThreeDemo {
     return this;
   }
 
-  protected init(renderer: Renderer, camera: Camera): void { }
-  protected process(state: DemoProcessState): void { }
+  protected init(renderer: Renderer, camera: Camera): void {}
+  protected process(state: DemoProcessState): void {}
 
   async run(root: HTMLElement, width: number, height: number): Promise<void> {
     const renderer = this.createRenderer(width, height);
@@ -61,7 +67,7 @@ export abstract class ThreeDemo {
       this.#lastAnimationFrame = time;
       renderer.render(this.scene, camera);
       requestAnimationFrame(render);
-    }
+    };
     requestAnimationFrame(render);
     // while (true) {
     //   const time = await new Promise(requestAnimationFrame);
