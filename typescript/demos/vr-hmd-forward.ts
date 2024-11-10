@@ -1,50 +1,38 @@
-import {
-  ArrowHelper,
-  Camera,
-  ConeGeometry,
-  DoubleSide,
-  Group,
-  Mesh,
-  MeshBasicMaterial,
-  Object3D,
-  PerspectiveCamera,
-  PlaneGeometry,
-  Renderer,
-} from 'three';
+import * as three from 'three';
 // @ts-expect-error
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // @ts-expect-error
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { getById } from '../dom-utils.js';
-import { DemoProcessState, ThreeDemo, vec3 } from '../three-utils.js';
+import { ProcessState, InitState, ThreeDemo, vec3 } from '../three-utils.js';
 
 class Demo extends ThreeDemo {
-  hmd: Object3D;
-  player: ArrowHelper;
+  hmd: three.Object3D;
+  player: three.ArrowHelper;
 
   constructor() {
     super();
     this.addDefaultGrid();
 
-    const hmd_wire = new Mesh(
-      new ConeGeometry(0.2, 0.2, 4),
-      new MeshBasicMaterial({ color: 'black', wireframe: true }),
+    const hmd_wire = new three.Mesh(
+      new three.ConeGeometry(0.2, 0.2, 4),
+      new three.MeshBasicMaterial({ color: 'black', wireframe: true }),
     );
     hmd_wire.translateZ(-0.1);
     hmd_wire.rotateY(Math.PI / 4);
     hmd_wire.rotateOnWorldAxis(vec3(1, 0, 0), Math.PI / 2);
 
-    const hmd_forward = new ArrowHelper(
+    const hmd_forward = new three.ArrowHelper(
       vec3(0, 0, -1).normalize(),
       vec3(0, 0, 0),
       0.5,
       'blue',
     );
 
-    const hmd_yz = new Mesh(
-      new PlaneGeometry(1, 1),
-      new MeshBasicMaterial({
-        side: DoubleSide,
+    const hmd_yz = new three.Mesh(
+      new three.PlaneGeometry(1, 1),
+      new three.MeshBasicMaterial({
+        side: three.DoubleSide,
         transparent: true,
         color: 'magenta',
         opacity: 0.15,
@@ -52,47 +40,44 @@ class Demo extends ThreeDemo {
     );
     hmd_yz.rotateY(Math.PI / 2);
 
-    this.add((this.hmd = new Group().add(hmd_wire, hmd_forward, hmd_yz)));
+    this.hmd = new three.Group().add(hmd_wire, hmd_forward, hmd_yz);
     this.hmd.position.set(0, 0.5, 0);
+    this.add(this.hmd);
 
-    this.add(
-      (this.player = new ArrowHelper(
-        vec3(0, 0, -1),
-        vec3(0, 0, 0),
-        0.5,
-        'red',
-      )),
+    this.player = new three.ArrowHelper(
+      vec3(0, 0, -1),
+      vec3(0, 0, 0),
+      0.5,
+      'red',
     );
+    this.add(this.player);
   }
 
-  createCamera(height: number, width: number): Camera {
-    const camera = new PerspectiveCamera(45, width / height, 0.1, 10);
+  createCamera(width: number, height: number): three.Camera {
+    const camera = new three.PerspectiveCamera(45, width / height, 0.1, 10);
     camera.position.set(-1.5, 1, -1.5);
     camera.lookAt(0, 1, 0);
     return camera;
   }
 
-  protected init(renderer: Renderer, camera: Camera): void {
-    const orbitControls = new OrbitControls(camera, renderer.domElement);
-    orbitControls.update();
+  protected init({ renderer, camera }: InitState): void {
+    const orbit = new OrbitControls(camera, renderer.domElement);
+    orbit.update();
 
-    const transformControls = new TransformControls(
-      camera,
-      renderer.domElement,
-    );
-    transformControls.addEventListener(
+    const transform = new TransformControls(camera, renderer.domElement);
+    transform.addEventListener(
       'dragging-changed',
-      (event: any) => (orbitControls.enabled = !event.value),
+      (event: any) => (orbit.enabled = !event.value),
     );
-    // transformControls.addEventListener("objectChange", () => update());
-    transformControls.space = 'world';
-    transformControls.mode = 'rotate';
-    transformControls.attach(this.hmd);
+    transform.addEventListener('objectChange', () => {});
+    transform.space = 'world';
+    transform.mode = 'rotate';
+    transform.attach(this.hmd);
 
-    this.add(transformControls.getHelper());
+    this.add(transform.getHelper());
   }
 
-  protected process(state: DemoProcessState): void {
+  protected process(state: ProcessState): void {
     const projection = this.hmd
       .getWorldDirection(vec3())
       .negate()

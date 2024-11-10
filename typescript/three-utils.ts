@@ -1,82 +1,70 @@
-import {
-  AxesHelper,
-  Camera,
-  GridHelper,
-  Matrix3,
-  Object3D,
-  Renderer,
-  Scene,
-  Vector3,
-  WebGLRenderer,
-} from 'three';
+import * as three from 'three';
 
-export function vec3(x = 0, y = 0, z = 0): Vector3 {
-  return new Vector3(x, y, z);
+export function vec3(x = 0, y = 0, z = 0): three.Vector3 {
+  return new three.Vector3(x, y, z);
 }
 
-export function basis(x: Vector3, y: Vector3, z: Vector3): Matrix3 {
-  return new Matrix3().set(x.x, y.x, z.x, x.y, y.y, y.z, x.z, y.z, z.z);
+export function basis(
+  x: three.Vector3,
+  y: three.Vector3,
+  z: three.Vector3,
+): three.Matrix3 {
+  return new three.Matrix3().set(x.x, y.x, z.x, x.y, y.y, y.z, x.z, y.z, z.z);
 }
 
-export interface DemoProcessState {
+export interface InitState {
+  readonly camera: three.Camera;
+  readonly renderer: three.Renderer;
+}
+
+export interface ProcessState extends InitState {
   readonly delta: number;
-  readonly camera: Camera;
-  readonly renderer: Renderer;
 }
 
 export abstract class ThreeDemo {
   #lastAnimationFrame = -1;
 
-  readonly scene: Scene;
+  readonly scene: three.Scene;
 
   constructor() {
-    this.scene = new Scene();
+    this.scene = new three.Scene();
   }
 
-  abstract createCamera(height: number, width: number): Camera;
+  abstract createCamera(height: number, width: number): three.Camera;
 
-  protected createRenderer(width: number, height: number): Renderer {
-    const renderer = new WebGLRenderer({ alpha: true, antialias: true });
+  protected createRenderer(width: number, height: number): three.Renderer {
+    const renderer = new three.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
     return renderer;
   }
 
   protected addDefaultGrid(): this {
-    return this.add(new AxesHelper(5), new GridHelper(2, 10));
+    return this.add(new three.AxesHelper(5), new three.GridHelper(2, 10));
   }
 
-  protected add(...objects: Object3D[]): this {
+  protected add(...objects: three.Object3D[]): this {
     this.scene.add(...objects);
     return this;
   }
 
-  protected init(renderer: Renderer, camera: Camera): void {}
-  protected process(state: DemoProcessState): void {}
+  protected init(state: InitState): void {}
+  protected process(state: ProcessState): void {}
 
   async run(root: HTMLElement, width: number, height: number): Promise<void> {
     const renderer = this.createRenderer(width, height);
     const camera = this.createCamera(width, height);
-    const state = { delta: 0, camera, renderer } satisfies DemoProcessState;
+    const state = { delta: 0, camera, renderer } satisfies ProcessState;
     root.appendChild(renderer.domElement);
-    const render = (time: number) => {
+    this.init(state);
+    while (true) {
+      const time = await new Promise(requestAnimationFrame);
       if (this.#lastAnimationFrame != -1) {
         state.delta = time - this.#lastAnimationFrame;
         this.process(state);
       }
       this.#lastAnimationFrame = time;
       renderer.render(this.scene, camera);
-      requestAnimationFrame(render);
-    };
-    requestAnimationFrame(render);
-    // while (true) {
-    //   const time = await new Promise(requestAnimationFrame);
-    //   if (this.#lastAnimationFrame != -1) {
-    //     state.delta = time - this.#lastAnimationFrame;
-    //     this.process(state);
-    //   }
-    //   this.#lastAnimationFrame = time;
-    //   renderer.render(this.scene, camera);
-    // }
+    }
   }
 }
