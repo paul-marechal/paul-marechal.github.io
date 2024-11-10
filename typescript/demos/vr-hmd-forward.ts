@@ -60,16 +60,18 @@ class Demo extends ThreeDemo {
     return camera;
   }
 
-  protected init({ renderer, camera }: InitState): void {
-    const orbit = new OrbitControls(camera, renderer.domElement);
+  protected init(state: InitState): void {
+    const orbit = new OrbitControls(state.camera, state.renderer.domElement);
     orbit.update();
 
-    const transform = new TransformControls(camera, renderer.domElement);
+    const transform = new TransformControls(
+      state.camera,
+      state.renderer.domElement,
+    );
     transform.addEventListener(
       'dragging-changed',
       (event: any) => (orbit.enabled = !event.value),
     );
-    transform.addEventListener('objectChange', () => {});
     transform.space = 'world';
     transform.mode = 'rotate';
     transform.attach(this.hmd);
