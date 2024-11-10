@@ -25,7 +25,7 @@ var rotation := Basis.looking_at(hmd_forward_xz, Vector3.UP)
 
 This would be the result:
 
-<script type="module" src="/assets/demos/vr-hmd-forward.js"></script>
+<script type="module" src="/assets/js/demos/vr-hmd-forward.js"></script>
 <div id="vr-hmd-forward-root" class="illustration interactive"></div>
 
 One issue there happens when the player looks down to the ground: With only slight movements of the head it is possible to drastically alter the direction!
@@ -94,7 +94,7 @@ var rotation := Basis(x, y, z)
 
 And this is the new result:
 
-<script type="module" src="/assets/demos/vr-hmd-planes.js"></script>
+<script type="module" src="/assets/js/demos/vr-hmd-planes.js"></script>
 <div id="vr-hmd-planes-root" class="illustration interactive"></div>
 
 This provides a much more stable orientation for our character controller: We can now look down at our feet and tilt our head without changing our direction!

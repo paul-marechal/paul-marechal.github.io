@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "rootDir": "typescript",
+    "outDir": "assets/js",
+    "strict": true,
+    "strictNullChecks": true,
+    "lib": [
+      "DOM",
+      "ES2022"
+    ],
+    "paths": {
+      "three/addons/*": ["./node_modules/three/examples/jsm/*"]
+    }
+  }
+}

@@ -1,18 +1,19 @@
-"use-strict";
+import * as three from 'three';
+// @ts-expect-error
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+// @ts-expect-error
+import { TransformControls } from 'three/addons/controls/TransformControls.js';
+import { getById } from '../dom-utils.js';
+import { basis, vec3 } from '../three-utils.js';
 
-import * as three from "three";
-
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { TransformControls } from "three/addons/controls/TransformControls.js";
-
-import { basis, createRenderer, vec3 } from "/assets/js/three-utils.js";
-
-const root = document.getElementById("vr-hmd-planes-root");
+const root = getById('vr-hmd-planes-root');
 
 const width = root.clientWidth;
 const height = 400;
 
-const renderer = createRenderer(width, height);
+const renderer = new three.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(width, height);
 
 root.appendChild(renderer.domElement);
 
@@ -31,7 +32,7 @@ const hmd = new three.Group();
 
 const hmd_wire = new three.Mesh(
   new three.ConeGeometry(0.2, 0.2, 4),
-  new three.MeshBasicMaterial({ color: "black", wireframe: true })
+  new three.MeshBasicMaterial({ color: 'black', wireframe: true }),
 );
 hmd_wire.translateZ(-0.1);
 hmd_wire.rotateY(Math.PI / 4);
@@ -42,9 +43,9 @@ const hmd_yz = new three.Mesh(
   new three.MeshBasicMaterial({
     side: three.DoubleSide,
     transparent: true,
-    color: "magenta",
+    color: 'magenta',
     opacity: 0.15,
-  })
+  }),
 );
 hmd_yz.rotateY(Math.PI / 2);
 
@@ -58,9 +59,9 @@ const world_xz = new three.Mesh(
   new three.MeshBasicMaterial({
     side: three.DoubleSide,
     transparent: true,
-    color: "cyan",
+    color: 'cyan',
     opacity: 0.15,
-  })
+  }),
 );
 world_xz.rotateX(Math.PI / 2);
 world_xz.position.copy(hmd.position);
@@ -70,11 +71,11 @@ const hmd_forward = new three.ArrowHelper(
   vec3(0, 0, -1).normalize(),
   vec3(0, 0, 0),
   0.5,
-  "blue"
+  'blue',
 );
 hmd_forward.position.copy(hmd.position);
 
-const player = new three.ArrowHelper(vec3(0, 0, -1), vec3(0, 0, 0), 0.5, "red");
+const player = new three.ArrowHelper(vec3(0, 0, -1), vec3(0, 0, 0), 0.5, 'red');
 
 update();
 scene.add(hmd_forward, player);
@@ -84,19 +85,22 @@ orbitControls.update();
 
 const transformControls = new TransformControls(camera, renderer.domElement);
 transformControls.addEventListener(
-  "dragging-changed",
-  (event) => (orbitControls.enabled = !event.value)
+  'dragging-changed',
+  (event: any) => (orbitControls.enabled = !event.value),
 );
-transformControls.addEventListener("objectChange", () => update());
-transformControls.space = "world";
-transformControls.mode = "rotate";
+transformControls.addEventListener('objectChange', () => update());
+transformControls.space = 'world';
+transformControls.mode = 'rotate';
 transformControls.attach(hmd);
 
 scene.add(transformControls.getHelper());
 
 function update() {
   const y = vec3(0, 1, 0);
-  const z = hmd.localToWorld(vec3(1, 0, 0)).cross(vec3(0, 1, 0)).normalize();
+  const z = hmd
+    .localToWorld(vec3(1, 0, 0))
+    .cross(vec3(0, 1, 0))
+    .normalize();
   const x = vec3(0, 1, 0).cross(z).normalize();
   const mat3 = basis(x, y, z);
   const direction = vec3(0, 0, -1).applyMatrix3(mat3);

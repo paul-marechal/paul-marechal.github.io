@@ -1,1 +1,4 @@
 _site/
+assets/js/
+node_modules/
+*.tsbuildinfo

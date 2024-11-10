@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "paul-marechal.github.io",
+  "version": "1.0.0",
+  "description": "Bunch of scripts used on this website",
+  "scripts": {
+    "build": "prettier typescript --write && tsc -b",
+    "watch": "tsc -b -w"
+  },
+  "author": "Paul Maréchal",
+  "license": "LicenseRef-LICENSE",
+  "devDependencies": {
+    "@types/three": "^0.169.0",
+    "prettier": "^3.3.3",
+    "three": "^0.170.0",
+    "typescript": "^5.6.3"
+  }
+}
