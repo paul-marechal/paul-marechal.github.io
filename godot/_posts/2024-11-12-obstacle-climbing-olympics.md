@@ -11,7 +11,7 @@ tags:
 
 How fast do you think you can climb up something? Assuming a scene with only the ground, an elevated ground, the sky, and you?
 
-<img alt="" src="">
+<three-demo height="400" src="{% link /assets/js/demos/climb-demo.js %}" class="illustration interactive"></three-demo>
 
 First let's assume that once someone jumped they follow [projectile motion equations](https://en.wikipedia.org/wiki/Projectile_motion#Kinematic_quantities) along the `Y` axis purely, meaning that once we've been set in motion the only force applied is gravity pulling down:
 
@@ -70,9 +70,9 @@ We replace $$ t_{apex} $$ by $$ v_{0}/g $$:
 $$
 \begin{aligned}
 y_{apex} &= v_{0}(\frac{v_{0}}{g})-\frac{1}{2}g(\frac{v_{0}}{g})^2 \\
-y_{apex} &= \frac{v_{0}^2}{g}-\frac{1}{2}\frac{v_{0}^2}{g} \\
-y_{apex} &= \frac{2v_{0}^2 - v_{0}^2}{2g} \\
-2g(y_{apex}) &= v_{0}^2
+y_{apex} &= \frac{v_{0}^2}{g}-\frac{v_{0}^2}{2g} \\
+y_{apex} &= \frac{v_{0}^2}{2g} \\
+% 2g(y_{apex}) &= v_{0}^2
 \end{aligned}
 $$
 
@@ -83,3 +83,42 @@ v_{0} = \sqrt{2g(y_{apex})}
 $$
 
 And it will take $$ \sqrt{2g(y_{apex})} / g $$ seconds to reach after jumping!
+
+<three-demo height="400" src="{% link /assets/js/demos/climb-chart.js %}" class="illustration interactive">
+  <style> /* this style is leaky! */
+    .consolas {
+      font-family: consolas
+    }
+    #chart-controls {
+      position: absolute;
+      background-color: white;
+      border: 0 solid black;
+      border-width: 0 1px 1px 1px;
+      padding: 3px;
+      top: 1px;
+      left: 50%;
+      transform: translate(-50%, 0);
+    }
+    #chart-apex-label {
+      position: absolute;
+      color: darkred;
+      bottom: 50%;
+      left: 9%;
+    }
+    #chart-v0-label {
+      position: absolute;
+      color: blue;
+      bottom: 9%;
+      left: 10%;
+    }
+  </style>
+  <span id="chart-controls" class="consolas">
+    v0 offset: <input id="chart-v0-offset-input" type="range" min="-1" max="1" value="0" step="0.01" /> <label id="chart-v0-offset-label">+0.00</label>m/s
+  </span>
+  <label id="chart-v0-label" class="consolas">NaN</label>
+  <label id="chart-apex-label" class="consolas">NaN</label>
+</three-demo>
+
+In the above example the <span style="color: blue;">blue line</span> represents the $$ y $$ position over time, you can move the <span style="color: darkred;">red line</span> which represents the target $$ y_{apex} $$, while also adding/removing some velocity to/from $$ v_{0} $$ using the slider at the top.
+
+As you can see: if your $$ v_{0} $$ is too high you will overshoot the altitude you meant to reach, while if you are short on speed then you'll miss it!

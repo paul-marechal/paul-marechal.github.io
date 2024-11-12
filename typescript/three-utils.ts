@@ -7,6 +7,14 @@ export function vec2(x?: number, y?: number): three.Vector2 {
 export function vec3(x?: number, y?: number, z?: number): three.Vector3 {
   return new three.Vector3(x, y, z);
 }
+export declare namespace vec3 {
+  export const DOWN: three.Vector3;
+  export const ZERO: three.Vector3;
+}
+Object.defineProperties(vec3, {
+  DOWN: { get: () => vec3(0, -1, 0) },
+  ZERO: { get: () => vec3(0, 0, 0) },
+});
 
 export function basis(
   x: three.Vector3,

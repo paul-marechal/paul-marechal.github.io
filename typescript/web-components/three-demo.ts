@@ -1,17 +1,12 @@
 import * as three from 'three';
 import type { MaybePromise } from '../type-utils';
 
-export interface ReadyState {
-  readonly scene: three.Scene;
-  readonly camera: three.Camera;
-  readonly renderer: three.WebGLRenderer;
-  render(): void;
-}
+export type Render = () => void;
 
 export type ThreeDemo = (
   scene: three.Scene,
   renderer: three.WebGLRenderer,
-  render: () => void,
+  render: Render,
 ) => MaybePromise<three.Camera>;
 
 export class HTMLThreeDemoElement extends HTMLElement {
@@ -22,8 +17,8 @@ export class HTMLThreeDemoElement extends HTMLElement {
     this.style.display = 'block';
   }
 
-  getModule(): string | null | undefined {
-    return this.getAttribute('module');
+  getSrc(): string | null | undefined {
+    return this.getAttribute('src');
   }
 
   getWidth(): number {
@@ -64,7 +59,7 @@ export class HTMLThreeDemoElement extends HTMLElement {
   }
 
   async init(abort: AbortSignal): Promise<void> {
-    const src = this.getModule();
+    const src = this.getSrc();
     if (!src) {
       throw new Error("missing 'module' attribute!");
     }
@@ -72,9 +67,10 @@ export class HTMLThreeDemoElement extends HTMLElement {
     if (abort.aborted || !nodeFactory) {
       return;
     }
-    this.attachShadow({ mode: 'open' });
+    const shadow = this.attachShadow({ mode: 'closed' });
+    shadow.innerHTML = '<slot></slot>';
     const canvas = document.createElement('canvas');
-    this.shadowRoot!.appendChild(canvas);
+    shadow.appendChild(canvas);
     this.start(nodeFactory, canvas);
   }
 
