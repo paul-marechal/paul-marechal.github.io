@@ -24,7 +24,7 @@ y &= v_{0}t\sin(\theta)-\frac{1}{2}gt^2 \\
 v_{y} &= v_{0}\sin(\theta)-gt \\
 
 \text{Acceleration (ms}^{-2}\text{) } \quad
-a_{y} &= -gt
+a_{y} &= -g
 \end{aligned}
 $$
 
@@ -39,7 +39,7 @@ y &= v_{0}t-\frac{1}{2}gt^2 \\
 v_{y} &= v_{0}-gt \\
 
 \text{Acceleration (ms}^{-2}\text{) } \quad
-a_{y} &= -gt
+a_{y} &= -g
 \end{aligned}
 $$
 
